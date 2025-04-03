@@ -8,7 +8,7 @@ function Timer() {
     let timer;
     if (isRunning) {
       timer = setInterval(() => {
-        setTime((prevTime) => prevTime + 10);
+        setTime((counter) => counter + 10);
       }, 10);
     }
     return () => clearInterval(timer);
@@ -21,25 +21,39 @@ function Timer() {
   };
 
   const formatTime = (milliseconds) => {
-    const minutes = Math.floor(milliseconds / 60000);
+    const hours = Math.floor(milliseconds / 3600000);
+    const minutes = Math.floor((milliseconds % 3600000) / 60000);
     const seconds = Math.floor((milliseconds % 60000) / 1000);
     const centiseconds = Math.floor((milliseconds % 1000) / 10);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}.${centiseconds < 10 ? "0" : ""}${centiseconds}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${centiseconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   return (
     <div className="text-center mt-10">
-      <h1 className="text-4xl font-bold mb-5">Time: {formatTime(time)}</h1>
-      <button 
-        className={`px-4 py-2 shadow-md rounded text-white mr-2 ${isRunning ? "bg-red-500" : "bg-green-500"}`} 
-        onClick={handleStartStop}>
-        {isRunning ? "Stop" : "Start"}
-      </button>
-      <button 
-        className="bg-blue-500 px-4 py-2 shadow-md rounded text-white" 
-        onClick={handleReset}>
-        Reset
-      </button>
+      <span className="text-4xl font-bold mb-5">Timer: </span>
+      <span className="text-5xl font-bold inline-block w-60">
+        {formatTime(time)}
+      </span>
+      <div className="mt-5">
+        <button
+          className={`px-4 py-2 shadow-md rounded text-white mr-2 ${
+            isRunning ? "bg-red-500" : "bg-green-500"
+          }`}
+          onClick={handleStartStop}
+        >
+          {isRunning ? "Stop" : "Start"}
+        </button>
+        <button
+          className="bg-blue-500 px-4 py-2 shadow-md rounded text-white"
+          onClick={handleReset}
+        >
+          Reset
+        </button>
+      </div>
     </div>
   );
 }
